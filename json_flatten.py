@@ -10,23 +10,21 @@ def flatten(data, path="", result=None):
         
     if isinstance(data, dict):
         for key, value in data.items():
-            new_path = f"{path}.{key}" if path else key
-            if (type(value) == list):
-                result[new_path] = value[0]
-                for i in range(len(value) - 1):
-                    result[new_path] = value[i]
-            else:
-                result[new_path] = value
-            
-            flatten(value, new_path, result)
-            
+            dict_path = f"{path}.{key}"
+            flatten(value, dict_path, result)
+    
     elif isinstance(data, list):
-        new_path = f"{path}[]"
         for item in data:
-            flatten(item, new_path, result)
+            list_path = f"{path}[]"
+            flatten(item, list_path, result)
             
     else:
-        result[path] = data
+        if path not in result:
+            result[path] = data
+        else:
+            if not isinstance(result[path], list):
+                result[path] = [result[path]]
+            result[path].append(data)
         
     return result
 
